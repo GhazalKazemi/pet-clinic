@@ -3,7 +3,7 @@
     <parent>
         <artifactId>pet-clinic</artifactId>
         <groupId>com.springboot</groupId>
-        <version>0.0.2-SNAPSHOT</version>
+        <version>0.0.1-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -54,8 +54,4 @@
 <!--            </plugin>-->
 <!--        </plugins>-->
 <!--    </build>-->
-    <scm>
-        <developerConnection>scm:git:https://github.com/GhazalKazemi/pet-clinic.git</developerConnection>
-
-    </scm>
 </project>
