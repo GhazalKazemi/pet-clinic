@@ -54,8 +54,4 @@
 <!--            </plugin>-->
 <!--        </plugins>-->
 <!--    </build>-->
-    <scm>
-        <developerConnection>scm:git:https://github.com/GhazalKazemi/pet-clinic.git</developerConnection>
-
-    </scm>
 </project>
