@@ -11,4 +11,8 @@ public class IndexController {
     public String showHomepage(){
         return "index";
     }
+    @GetMapping("/oups")
+    public String showErrors(){
+        return "not-implemented";
+    }
 }
