@@ -3,9 +3,10 @@ package com.springboot.petclinic.map;
 import com.springboot.petclinic.entity.Pet;
 import com.springboot.petclinic.entity.PetType;
 import com.springboot.petclinic.service.PetTypeService;
+import org.springframework.stereotype.Service;
 
 import java.util.Set;
-
+@Service
 public class PetTypeMapService extends AbstractMapService<PetType, Long> implements PetTypeService {
     @Override
     public PetType findById(Long id) {
