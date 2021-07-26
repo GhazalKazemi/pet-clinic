@@ -13,7 +13,6 @@ public class Owner extends Person{
     @Column(name = "phone_number")
     private String phoneNumber;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "owner")
-    @Column(name = "pets")
     private Set<Pet> pets = new HashSet<>();
 
     public String getAddress() {

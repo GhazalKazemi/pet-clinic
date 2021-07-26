@@ -9,7 +9,6 @@ public class Vet extends Person{
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "vet_specialty", joinColumns = @JoinColumn(name = "vet_id"),
     inverseJoinColumns = @JoinColumn(name = "specialty_id"))
-    @Column(name = "specialties")
     private Set<Specialty> specialties = new HashSet<>();
 
     public Set<Specialty> getSpecialties() {
