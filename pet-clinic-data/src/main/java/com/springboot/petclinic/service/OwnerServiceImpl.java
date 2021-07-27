@@ -2,11 +2,13 @@ package com.springboot.petclinic.service;
 
 import com.springboot.petclinic.entity.Owner;
 import com.springboot.petclinic.repository.OwnerRepository;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 
 import java.util.HashSet;
 import java.util.Set;
 @Service
+@Profile("spring-data-jpa")
 public class OwnerServiceImpl implements OwnerService{
 
     private final OwnerRepository ownerRepository;
