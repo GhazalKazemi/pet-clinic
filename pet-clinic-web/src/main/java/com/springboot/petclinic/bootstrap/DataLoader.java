@@ -1,10 +1,7 @@
 package com.springboot.petclinic.bootstrap;
 
 import com.springboot.petclinic.entity.*;
-import com.springboot.petclinic.service.OwnerService;
-import com.springboot.petclinic.service.PetTypeService;
-import com.springboot.petclinic.service.SpecialtyService;
-import com.springboot.petclinic.service.VetService;
+import com.springboot.petclinic.service.*;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
@@ -19,11 +16,16 @@ public class DataLoader implements CommandLineRunner {
     private final PetTypeService petTypeService;
 
     private final SpecialtyService specialtyService;
-    public DataLoader(OwnerService ownerService, VetService vetService, PetTypeService petTypeService, SpecialtyService specialtyService) {
+
+    private final VisitService visitService;
+    public DataLoader(OwnerService ownerService, VetService vetService,
+                      PetTypeService petTypeService, SpecialtyService specialtyService,
+                      VisitService visitService) {
         this.ownerService = ownerService;
         this.vetService = vetService;
         this.petTypeService = petTypeService;
         this.specialtyService = specialtyService;
+        this.visitService = visitService;
     }
 
     @Override
@@ -91,6 +93,13 @@ public class DataLoader implements CommandLineRunner {
 
         fiona.getPets().add(fionaPet);
         ownerService.save(fiona);
+
+        Visit visit1 = new Visit();
+        visit1.setDescription("Cat f3 vaccination");
+        visit1.setPet(fionaPet);
+        visit1.setDate(LocalDate.now());
+
+        visitService.save(visit1);
 
         Vet vet1 = new Vet();
         // vet1.setId(1L);
