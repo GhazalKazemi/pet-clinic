@@ -19,10 +19,9 @@ public class Owner extends Person{
     private String phoneNumber;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "owner")
     private Set<Pet> pets = new HashSet<>();
-
     @Builder
-    public Owner(String firstName, String lastName, String address, String city, String phoneNumber, Set<Pet> pets) {
-        super(firstName, lastName);
+    public Owner(Long id, String firstName, String lastName, String address, String city, String phoneNumber, Set<Pet> pets) {
+        super(id, firstName, lastName);
         this.address = address;
         this.city = city;
         this.phoneNumber = phoneNumber;
