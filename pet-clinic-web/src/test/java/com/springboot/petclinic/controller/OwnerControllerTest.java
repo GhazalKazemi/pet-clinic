@@ -11,12 +11,15 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
 import static org.hamcrest.Matchers.*;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -39,29 +42,31 @@ class OwnerControllerTest {
                 .build();
     }
 
-    @Test
-    void showOwners() throws Exception {
-        when(ownerService.findAll()).thenReturn(owners);
-        mockMvc.perform(get("/owners"))
-                .andExpect(status().is(200))
-                .andExpect(view().name("owner/index"))
-                .andExpect(model().attribute("owners",hasSize(2)));
-    }
+//    @Test
+//    void showOwners() throws Exception {
+//        when(ownerService.findAll()).thenReturn(owners);
+//        mockMvc.perform(get("/owners"))
+//                .andExpect(status().is(200))
+//                .andExpect(view().name("owner/index"))
+//                .andExpect(model().attribute("owners",hasSize(2)));
+//    }
 
-    @Test
-    void showOwnersByIndexPath() throws Exception {
-        when(ownerService.findAll()).thenReturn(owners);
-        mockMvc.perform(get("/owners/index"))
-                .andExpect(status().is(200))
-                .andExpect(view().name("owner/index"))
-                .andExpect(model().attribute("owners",hasSize(2)));
-    }
+//    @Test
+//    void showOwnersByIndexPath() throws Exception {
+//        when(ownerService.findAll()).thenReturn(owners);
+//        mockMvc.perform(get("/owners/index"))
+//                .andExpect(status().is(200))
+//                .andExpect(view().name("owner/index"))
+//                .andExpect(model().attribute("owners",hasSize(2)));
+//    }
 
     @Test
     void findOwners() throws Exception {
         mockMvc.perform(get("/owners/find"))
                 .andExpect(status().isOk())
-                .andExpect(view().name("not-implemented"));
+                .andExpect(view().name("owner/findOwners"))
+                .andExpect(model().attributeExists("owner"));
+        verifyNoInteractions(ownerService);
     }
 
     @Test
@@ -72,5 +77,24 @@ class OwnerControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(view().name("owner/ownerDetails"))
                 .andExpect(model().attribute("owner", hasProperty("id",is(1L))));
+    }
+    @Test
+    void findOwnersReturnMany() throws Exception {
+        when(ownerService.findAllByLastNameLike(anyString()))
+                .thenReturn(Arrays.asList(Owner.builder().id(1L).build(), Owner.builder().id(2L).build()));
+
+        mockMvc.perform(get("/owners"))
+                .andExpect(status().isOk())
+                .andExpect(view().name("owner/ownersList"))
+                .andExpect(model().attribute("owners", hasSize(2)));
+    }
+    @Test
+    void findOwnersReturnOne() throws Exception {
+        when(ownerService.findAllByLastNameLike(anyString()))
+                .thenReturn(Arrays.asList(Owner.builder().id(1L).build()));
+        mockMvc.perform(get("/owners"))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(view().name("redirect:/owners/1"));
+
     }
 }
