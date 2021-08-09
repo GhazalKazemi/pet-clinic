@@ -4,12 +4,16 @@ import com.springboot.petclinic.entity.Pet;
 import com.springboot.petclinic.entity.Visit;
 import com.springboot.petclinic.service.PetService;
 import com.springboot.petclinic.service.VisitService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 
+import java.beans.PropertyEditorSupport;
+import java.time.LocalDate;
 import java.util.Map;
 
 @Controller
@@ -26,12 +30,18 @@ public class VisitController {
     @InitBinder
     public void setAllowedFields(WebDataBinder dataBinder) {
         dataBinder.setDisallowedFields("id");
+        dataBinder.registerCustomEditor(LocalDate.class, new PropertyEditorSupport(){
+            @Override
+            public void setAsText(String text) throws IllegalArgumentException {
+                setValue(LocalDate.parse(text));
+            }
+        });
     }
 
     @ModelAttribute("visit")
-    public Visit loadPetWithVisit(@PathVariable Long petId, Model model) {
+    public Visit loadPetWithVisit(@PathVariable Long petId, Map<String, Object> model) {
         Pet pet = petService.findById(petId);
-        model.addAttribute("pet", pet);
+        model.put("pet", pet);
         Visit visit = new Visit();
         pet.getVisits().add(visit);
         visit.setPet(pet);
@@ -51,7 +61,7 @@ public class VisitController {
             return "pet/createOrUpdateVisitForm";
         }
         else {
-            Visit savedVisit = visitService.save(visit);
+            visitService.save(visit);
             return "redirect:/owners/{ownerId}" ;
         }
     }

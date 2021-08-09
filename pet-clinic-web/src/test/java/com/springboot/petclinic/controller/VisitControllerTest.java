@@ -36,30 +36,34 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 class VisitControllerTest {
     @Mock
     PetService petService;
+    @Mock
+    VisitService visitService;
     @InjectMocks
     VisitController visitController;
     MockMvc mockMvc;
     private final UriTemplate visitUriTemplate = new UriTemplate("/owners/{ownerId}/pets/{petId}/visits/new");
-    private final Map<String, String > uriVariables = new HashMap<>();
+    private final Map<String, String> uriVariables = new HashMap<>();
     private URI visitUri;
+
     @BeforeEach
     void setUp() {
         Long ownerId = 1L;
         Long petId = 1L;
         when(petService.findById(anyLong()))
-                .thenReturn( Pet.builder()
-                .id(petId)
-                .birthDate(LocalDate.of(2018,11,11))
-                .name("Jasper")
-                .owner(Owner.builder()
-                        .id(ownerId)
-                        .firstName("Jane")
-                        .lastName("Public")
-                        .build())
-                .petType(PetType.builder()
-                        .name("Dog")
-                        .build())
-                .build());
+                .thenReturn(Pet.builder()
+                        .id(petId)
+                        .birthDate(LocalDate.of(2018, 11, 11))
+                        .name("Jasper")
+                        .visits(new HashSet<>())
+                        .owner(Owner.builder()
+                                .id(ownerId)
+                                .firstName("Jane")
+                                .lastName("Public")
+                                .build())
+                        .petType(PetType.builder()
+                                .name("Dog")
+                                .build())
+                        .build());
         uriVariables.clear();
         uriVariables.put("ownerId", ownerId.toString());
         uriVariables.put("petId", petId.toString());
@@ -79,11 +83,11 @@ class VisitControllerTest {
 
     @Test
     void processNewVisitForm() throws Exception {
-        mockMvc.perform(post("/owners/{ownerId}/pets/{petId}/visits/new")
-                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                .param("date", "2018-11-11")
-                .param("description", "Yet another description")
-        )
+        mockMvc.perform(post(visitUri)
+                        .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                        .param("date", "2018-11-11")
+                        .param("description", "Yet another description")
+                )
                 .andExpect(status().is3xxRedirection())
                 .andExpect(view().name("redirect:/owners/{ownerId}"))
                 .andExpect(model().attributeExists("visit"));
